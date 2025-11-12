@@ -1,0 +1,12 @@
+faiss-cpu
+numpy
+pandas
+sentence-transformers
+openai
+langchain
+tqdm
+pyyaml
+streamlit
+matplotlib
+Pillow
+pytest
