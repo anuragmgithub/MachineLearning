@@ -121,5 +121,9 @@ When you use RAG (Retrieval-Augmented Generation):
 ### In RAG + FAISS Context:  
 SentenceTransformer : Converts text (docs, queries) → embeddings  
 FAISS : Stores & searches these embeddings efficiently  
-LLM (GPT) : Uses top results from FAISS as context for generation  
+LLM (GPT) : Uses top results from FAISS as context for generation    
 
+- SentenceTransformer	Converts text → vector embeddings  
+- FAISS	Stores those vectors efficiently  
+- FAISS Search	Finds nearest vectors quickly (semantic similarity)    
+- LLM (GPT)	Uses retrieved text to answer questions  
