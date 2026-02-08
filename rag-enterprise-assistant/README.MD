@@ -54,9 +54,39 @@ rag-enterprise-assistant/
 
 A Retrieval-Augmented Generation (RAG) project for enterprise document QA. This project ingests PDFs, processes them into embeddings, builds a FAISS index for retrieval, and uses an LLM to answer user queries based on relevant chunks.
 
+### Key Models Used
+
+| Component | Model | Details |
+|-----------|-------|---------|
+| **Embedding** | `all-MiniLM-L6-v2` (Sentence Transformers) | 384-dimensional dense embeddings for semantic search |
+| **LLM** | OpenAI `gpt-3.5-turbo` | Context-aware answer generation with configurable temperature |
+| **Vector Store** | FAISS (IndexFlatL2) | In-memory similarity search using L2 distance metrics |
+
+### Core Concepts
+
+- **Retrieval-Augmented Generation (RAG)**: Combines document retrieval with LLM generation for accurate, contextual answers
+- **Dense Vector Embeddings**: Semantic representations of text for similarity-based retrieval
+- **Vector Similarity Search**: Efficient document ranking using L2 distance in FAISS
+- **In-memory Vector Index**: Fast semantic search on enterprise-scale document collections
+- **Context-aware Prompting**: System prompts with domain expertise (financial domain) for specialized responses
+- **Chunk-based Processing**: Document segmentation for optimal context window and relevance
+
 ---
 
-## Architecture
+## Technology Stack
+
+| Category | Technology | Purpose |
+|----------|-----------|---------|
+| **LLM Provider** | OpenAI API | GPT-based answer generation |
+| **RAG Framework** | LangChain | Orchestration of retrieval & generation pipelines |
+| **Text Embeddings** | Sentence Transformers | Dense vector representations for semantic search |
+| **Vector DB** | FAISS (CPU) | Scalable similarity search and indexing |
+| **PDF Processing** | PyPDF | Document parsing and text extraction |
+| **API Framework** | FastAPI | High-performance REST API endpoints |
+| **Data Validation** | Pydantic | Type-safe configuration and schema validation |
+| **Configuration** | python-dotenv | Secure environment variable management |
+
+---
 
 ```
 PDF Documents
@@ -78,7 +108,27 @@ Answer Output
 
 ---
 
-## Setup & Installation
+## How It Works
+
+### 1. **Ingestion Pipeline**
+   - **PDF Loading**: Documents are read from `data/docs/` using PyPDF
+   - **Text Cleaning**: Remove noise, normalize whitespace, clean special characters
+   - **Chunking**: Split documents into semantic chunks (optimal size for embedding & context window)
+   - **Embedding Generation**: Convert text chunks to 384-dimensional vectors using `all-MiniLM-L6-v2`
+   - **Index Building**: Store embeddings in FAISS with L2 distance metric
+
+### 2. **Retrieval Pipeline**
+   - **Query Embedding**: Convert user query to 384-dimensional vector using the same embedding model
+   - **Semantic Search**: Find top-K most similar chunks using FAISS (L2 distance)
+   - **Reranking** (optional): Re-score retrieved chunks for relevance
+
+### 3. **Answer Generation**
+   - **Context Assembly**: Combine retrieved chunks as context
+   - **Prompt Engineering**: System prompt provides domain expertise (financial documents)
+   - **LLM Inference**: Send context + query to GPT-3.5-turbo with `temperature=0.2` for consistency
+   - **Answer Output**: Return concise, context-grounded responses
+
+---
 
 ### Prerequisites
 
@@ -133,7 +183,38 @@ python -m ingestion.run_ingestion
 
 ## Configuration
 
-Create a `.env` file in the project root with required environment variables.
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+EMBEDDER_MODEL=all-MiniLM-L6-v2
+LLM_MODEL=gpt-3.5-turbo
+FAISS_INDEX_PATH=data/faiss/banking_docs.index
+FAISS_META_PATH=data/faiss/banking_docs.meta
+```
+
+### Model Parameters
+
+#### Embedding Model (all-MiniLM-L6-v2)
+- **Dimensions**: 384
+- **Inference Speed**: Fast (suitable for real-time applications)
+- **Strengths**: Good balance of semantic understanding and efficiency
+- **Use Case**: Domain-agnostic semantic search
+
+#### LLM (GPT-3.5-turbo)
+- **Temperature**: 0.2 (low = deterministic, focused answers)
+- **Max Tokens**: 500 (configurable per request)
+- **System Prompt**: Financial domain expert
+- **Context Window**: ~4K tokens (sufficient for retrieved context + query)
+
+#### FAISS Index
+- **Metric**: L2 Distance (Euclidean distance)
+- **Type**: IndexFlatL2 (exact search, no approximation)
+- **Scalability**: CPU-based, suitable for up to ~1M documents
+
+---
 
 ---
 
