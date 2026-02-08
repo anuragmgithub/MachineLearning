@@ -1,0 +1,28 @@
+# Core
+python-dotenv==1.0.1
+pydantic==2.6.1
+
+# LLMs & RAG
+openai==1.12.0
+langchain==0.1.16
+langchain-community==0.0.34
+langchain-openai==0.0.8
+tiktoken==0.6.0
+
+# Vector DB
+faiss-cpu==1.7.4
+
+# API
+fastapi==0.110.0
+uvicorn==0.29.0
+
+# Data & Parsing
+pypdf==4.2.0
+markdown==3.6
+
+# Evaluation & Utils
+numpy==1.26.4
+pandas==2.2.1
+
+# Optional (SQL-aware RAG later)
+sqlalchemy==2.0.28
