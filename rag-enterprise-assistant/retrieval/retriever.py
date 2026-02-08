@@ -6,7 +6,7 @@ from ingestion.embedder import Embedder
 
 class Retriever:
     def __init__(self, index_path="data/faiss_index.index"):
-        print(f"⚡ Loading FAISS index from {index_path}...")
+        print(f"Loading FAISS index from {index_path}...")
         self.index = faiss.read_index(index_path)
         self.embedder = Embedder()
 
